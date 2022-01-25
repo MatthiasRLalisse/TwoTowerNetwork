@@ -199,7 +199,8 @@ class Evaluator(object):
       title_samp_size = max(eval_sample_size, len(incl_titles))
       query_samp_size = max(eval_sample_size, len(incl_queries))
       
-      pbar = tqdm(total=title_samp_size-len(incl_titles), desc='titles')
+      pbar = tqdm(total=title_samp_size-len(incl_titles), 
+                  desc='titles', position=0, leave=True)
       pbar.set_postfix({'n': f'{len(incl_titles)}'})
       i = 0; title_perm = np.random.permutation(self._all_titles)
       while len(incl_titles) < title_samp_size and i < len(self._all_titles):	
@@ -212,7 +213,8 @@ class Evaluator(object):
       incl_titles = list(incl_titles)
       
       #del pbar; _ = gc.collect()
-      pbar2 = tqdm(total=query_samp_size-len(incl_queries), desc='titles')
+      pbar2 = tqdm(total=query_samp_size-len(incl_queries), 
+                   desc='titles', position=0, leave=True)
       pbar2.set_postfix({'n': f'{len(incl_queries)}'})
       i = 0; query_perm = np.random.permutation(self._all_queries)
       while len(incl_queries) < query_samp_size and i < len(self._all_queries):
@@ -245,7 +247,7 @@ class Evaluator(object):
     t_ranks, q_ranks = [], []
     mean_mrr_q = mean_mrr_t = 0
     #progress_str = f'query mrr: {mean_mrr_q:.4f}, title mrr: {mean_mrr_t:.4f}'
-    pbar = tqdm(test_data) #, desc=progress_str)
+    pbar = tqdm(test_data, position=0, leave=True) #, desc=progress_str)
     pbar.set_postfix({'query_mrr': '0', 
                        'title_mrr': '0' })
     for title, query in pbar:
@@ -293,6 +295,11 @@ class Evaluator(object):
       
       t_all_similarities = np.concatenate(t_all_similarities)
       t_ranks_ = (-t_all_similarities).argsort().argsort() + 1
+      
+      #print('t', t_all_similarities)
+      #print(t_ranks_)
+      #print('q', q_all_similarities)
+      #print(q_ranks_)
       
       q_ranks.append(q_ranks_[0]); t_ranks.append(t_ranks_[0])
       mean_mrr_q = np.mean(1/np.array(q_ranks))
