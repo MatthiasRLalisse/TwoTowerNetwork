@@ -159,7 +159,8 @@ class Evaluator(object):
     __query2id = { q: i for i, q in enumerate(query_samp) }
     
     title2ids = {} #title: np.vstack([np.array(title_samp), np.array(query_samp)).T
-    for title in tqdm(title_samp, desc='compiling candidates (queries)'):
+    for title in tqdm(title_samp, desc='compiling candidates (queries)',
+                                  positon=0, leave=True):
       in_sample_candidate_ids = [ __query2id[q] for q in query_samp if q not in self.t2neighbors[title] ]
       #for _, cand in self._get_candidates(title, queries=True):
       #  #print(cand)
@@ -168,7 +169,8 @@ class Evaluator(object):
       title2ids[title] = np.array(in_sample_candidate_ids)
     
     query2ids = {}
-    for query in tqdm(query_samp, desc='compiling candidates (titles)'):
+    for query in tqdm(query_samp, desc='compiling candidates (titles)', 
+                                  position=0, leave=True):
       in_sample_candidate_ids = [ __title2id[t] for t in title_samp if t not in self.q2neighbors[query] ]
       #for cand, _ in self._get_candidates(query, queries=False):
       #  try: in_sample_candidate_ids.append(__title2id[cand])
